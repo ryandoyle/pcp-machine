@@ -7,6 +7,19 @@
 
 #define LUA_EXEC_FAILED_EXIT_CODE 125
 
+static char *default_host = "localhost";
+static char *host_context;
+
+const static char usage_text[] = "Usage: pcp-machine [OPTIONS] SCRIPT\n"
+"LUA scripting engine for Performance Co-Pilot\n"
+"\n"
+"Options:\n"
+"  -H HOST          Run LUA scripts in the context of HOST\n"
+"  -h               This help screen\n"
+"\n"
+"For more information see: https://github.com/ryandoyle/pcp-machine\n\n"
+;
+
 static void push_pmvalue_result(lua_State *L, pmValueSet *pm_value_set, int pm_type, int vlist_index) {
     pmAtomValue pm_atom_value;
 
@@ -45,11 +58,13 @@ static void push_pmvalue_result(lua_State *L, pmValueSet *pm_value_set, int pm_t
 static int l_metric(lua_State *L) {
 
     const char *metric = luaL_checkstring(L, 1);
-    const char *host = "localhost";
+    const char *host;
 
     /* Check if we have a hostname pushed */
     if(lua_type(L, 2) == LUA_TSTRING) {
         host = luaL_checkstring(L, 2);
+    } else {
+        host = host_context;
     }
 
     int error;
@@ -77,7 +92,45 @@ static int l_metric(lua_State *L) {
     return 1;
 }
 
-int main() {
+typedef struct {
+    char *host_context;
+    char *script_location;
+    int has_parsing_error;
+} PcpMachineOptions;
+
+static PcpMachineOptions parse_options(int argc, char **argv) {
+    int c;
+    PcpMachineOptions options = {
+            .host_context = default_host,
+            .script_location = NULL,
+            .has_parsing_error = 1,
+    };
+
+    if(argc == 1) {
+        fprintf(stderr, usage_text);
+        return options;
+    }
+
+    while((c = getopt(argc, argv, "hH:")) != -1) {
+        switch (c) {
+            case 'H':
+                options.host_context = optarg;
+                break;
+            case 'h':
+            default:
+                fprintf(stderr, usage_text);
+                return options;
+        }
+    }
+
+    options.script_location = argv[argc-1];
+
+    /* If we got here, options have parsed as they should */
+    options.has_parsing_error = 0;
+    return options;
+}
+
+static int evaluate_lua(char *script_location) {
     int error;
     int return_code = 0;
 
@@ -87,7 +140,7 @@ int main() {
     lua_pushcfunction(L, l_metric);
     lua_setglobal(L, "metric");
 
-    error = luaL_loadfile(L, "/home/ryan/code/pcp-machine/program.lua") || lua_pcall(L,0,1,0);
+    error = luaL_loadfile(L, script_location) || lua_pcall(L,0,1,0);
 
     if(error) {
         fprintf(stderr, "%s", lua_tostring(L, -1));
@@ -100,4 +153,16 @@ int main() {
 
     lua_close(L);
     return return_code;
+}
+
+int main(int argc, char **argv) {
+
+    PcpMachineOptions opts = parse_options(argc, argv);
+    if(opts.has_parsing_error) {
+        exit(1);
+    }
+
+    host_context = opts.host_context;
+
+    return evaluate_lua(opts.script_location);
 }
