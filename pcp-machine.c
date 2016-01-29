@@ -5,6 +5,8 @@
 #include <pcp/pmapi.h>
 #include "pcp_ez.h"
 
+#define LUA_EXEC_FAILED_EXIT_CODE 125
+
 static void push_pmvalue_result(lua_State *L, pmValueSet *pm_value_set, int pm_type, int vlist_index) {
     pmAtomValue pm_atom_value;
 
@@ -76,7 +78,6 @@ static int l_metric(lua_State *L) {
 }
 
 int main() {
-    char buff[256];
     int error;
     int return_code = 0;
 
@@ -91,6 +92,7 @@ int main() {
     if(error) {
         fprintf(stderr, "%s", lua_tostring(L, -1));
         lua_pop(L, 1);
+        return_code = LUA_EXEC_FAILED_EXIT_CODE;
     } else {
         return_code = lua_tointeger(L, -1);
         lua_pop(L, 1);
