@@ -1,6 +1,6 @@
 #include <pcp/pmapi.h>
-#include <lua5.3/lua.h>
-#include <lua5.3/lauxlib.h>
+#include <lua.h>
+#include <lauxlib.h>
 
 typedef struct pcp_ez_result {
     pmID pmid;

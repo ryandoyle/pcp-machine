@@ -2,7 +2,7 @@
 #define PMIE_LUA_PCP_EZ_H 1
 
 #include <pcp/pmapi.h>
-#include <lua5.3/lua.h>
+#include <lua.h>
 
 typedef struct pcp_ez_result pcp_ez_query_t;
 
