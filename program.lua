@@ -1,4 +1,5 @@
-m = metric('disk.dev.read', 'localhost')
+m = metric('disk.dev.read', {host='localhost'})
+
 
 print(m['sda'])
 
@@ -8,4 +9,6 @@ end
 
 print(metric('disk.all.read'))
 
-return 123
+print(os.getenv("MYVAR"))
+
+return 4

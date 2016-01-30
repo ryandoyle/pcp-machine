@@ -60,9 +60,16 @@ static int l_metric(lua_State *L) {
     const char *metric = luaL_checkstring(L, 1);
     const char *host;
 
-    /* Check if we have a hostname pushed */
-    if(lua_type(L, 2) == LUA_TSTRING) {
-        host = luaL_checkstring(L, 2);
+    /* Check if we have a hostname pushed onto the stack */
+    if(lua_gettop(L) == 2) {
+        if (lua_type(L, 2) == LUA_TTABLE) {
+            lua_pushstring(L, "host");
+            lua_gettable(L, 2);
+            host = luaL_checkstring(L, -1);
+            lua_pop(L, 1);
+        } else {
+            luaL_error(L, "Invalid argument: %s", luaL_checkstring(L, 2));
+        }
     } else {
         host = host_context;
     }
