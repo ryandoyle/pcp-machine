@@ -76,7 +76,7 @@ static int l_metric(lua_State *L) {
 
     int error;
     pcp_ez_query_t *pcp_ez;
-    if((error = pcp_ez_query_for(metric, host, &pcp_ez))) {
+    if((error = pcp_ez_query_for(metric, host, &pcp_ez)) < 0) {
         return pcp_ez_safe_raise_error(pcp_ez, L, error);
     }
 
