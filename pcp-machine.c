@@ -151,7 +151,7 @@ static int evaluate_lua(char *script_location) {
     error = luaL_loadfile(L, script_location) || lua_pcall(L,0,1,0);
 
     if(error) {
-        fprintf(stderr, "%s", lua_tostring(L, -1));
+        fprintf(stderr, "%s\n", lua_tostring(L, -1));
         lua_pop(L, 1);
         return_code = LUA_EXEC_FAILED_EXIT_CODE;
     } else {
