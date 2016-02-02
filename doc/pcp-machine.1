@@ -1,0 +1,79 @@
+.TH PCP-MACHINE 1
+.SH NAME
+\f3pcp-machine\f1 - Lua scripting engine for Performance Co-Pilot
+.SH SYNOPSIS
+\f3pcp-machine\f1 [\f3-h\f1] [\f3-H\f1 \f2host\f1] \f2script\f1
+.
+.
+.SH DESCRIPTION
+.B pcp-machine 
+is a programable query tool for Performance Co-Pilot,
+.BR PCPIntro (1). 
+It allows an user to query for live metrics in Lua scripts and program based on these retuned metrics.
+.P
+.B pcp-machine
+tries to adhere to the Unix philosophy of being small and modular and is intended to be used in a pipeline with other tools.
+.
+.
+.SH OPTIONS
+.TP 5
+.B \-H
+Query for metric in the context of \fIhost\fR. This option might be set by another tool that \fBpcp-machine\fR is using such as \fBnagios\fR(8). This option does not preclude querying against a host inside a Lua script. It is a convenience method that avoids having inject data using methods such as environment variables. Defaults to localhost.
+.
+.TP 5
+.B \-h
+This help screen.
+.
+.
+.SH EXAMPLE SCRIPTS
+Check the metric \fIkernel.all.nprocs\fR and print to the console if nprocs is over 1000.
+.sp
+.RS 4
+.nf
+nprocs = metric('kernel.all.nprocs')
+if nprocs > 1000 then
+  print('There are too many processes. ' .. nprocs .. ' are cunnretly running')
+end
+.fi
+.RE
+.sp
+Check \fIfilesys.free\fR metric for free space on each disk for host \fImyhost.example.com\fR. Print out the disk that storage is too low and exit \fBpcp-machine\fR with an exit code of 1
+.sp
+.RS 4
+.nf
+free_space = metric('filesys.free', {host='myhost.example.com'})
+for disk, bytes_free in pairs(free_space) do
+  if bytes_free < 10000000 then
+    print('Space on disk' .. instance .. 'is too low!')
+    return 1
+  end
+end
+print "Disks are all okay!"
+return 0
+
+.fi
+.RE
+For more script examples see
+.B /usr/share/pcp-machine/samples/*.lua
+.
+.
+.SH EXIT STATUS
+.TP 5
+.B 0
+Lua script executed successfully and Lua script did not specifically return an exit code.
+.TP 5
+.B 125 
+Lua script failed to execute.
+.TP 5
+.B n
+Lua script is able to alter the exit code using \fIreturn n\fR if it is specified.
+.
+.
+.SH SEE ALSO
+.BR PCPIntro (1),
+.BR pcp (1),
+.BR pminfo (1),
+.IR https://github.com/ryandoyle/pcp-machine ,
+.IR http://www.lua.org/manual/5.1/
+
+
