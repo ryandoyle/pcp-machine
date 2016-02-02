@@ -8,3 +8,7 @@ set(SOURCE_FILES pcp-machine.c pcp_ez.c pcp_ez.h)
 add_executable(pcp-machine ${SOURCE_FILES})
 
 target_link_libraries(pcp-machine pcp ${LUA_LIBRARIES})
+
+install(TARGETS pcp-machine DESTINATION bin)
+install(DIRECTORY samples/ DESTINATION share/pcp-machine PATTERN "scripts/*.lua")
+install(FILES doc/pcp-machine.1 DESTINATION share/man/man1)
