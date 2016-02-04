@@ -7,7 +7,7 @@
 
 #define LUA_EXEC_FAILED_EXIT_CODE 125
 
-static char *default_host = "localhost";
+static char *default_host = "local:";
 static char *host_context;
 
 const static char usage_text[] = "Usage: pcp-machine [OPTIONS] SCRIPT\n"

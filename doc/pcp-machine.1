@@ -18,7 +18,7 @@ tries to adhere to the Unix philosophy of being small and modular and is intende
 .SH OPTIONS
 .TP 5
 .B \-H
-Query for metric in the context of \fIhost\fR. This option might be set by another tool that \fBpcp-machine\fR is using such as \fBnagios\fR(8). This option does not preclude querying against a host inside a Lua script. It is a convenience method that avoids having inject data using methods such as environment variables. Defaults to localhost.
+Query for metric in the context of \fIhost\fR. This option might be set by another tool that \fBpcp-machine\fR is using such as \fBnagios\fR(8). This option does not preclude querying against a host inside a Lua script. It is a convenience method that avoids having to inject data using methods such as environment variables. Defaults to \fIlocal:\fR.
 .
 .TP 5
 .B \-h
@@ -26,25 +26,26 @@ This help screen.
 .
 .
 .SH EXAMPLE SCRIPTS
-Check the metric \fIkernel.all.nprocs\fR and print to the console if nprocs is over 1000.
+Check the metric \fIproc.runq.runnable\fR and print to the console if there are more runnable processes than CPUs.
 .sp
 .RS 4
 .nf
-nprocs = metric('kernel.all.nprocs')
-if nprocs > 1000 then
-  print('There are too many processes. ' .. nprocs .. ' are cunnretly running')
+cpus = metric('hinv.ncpu')
+nprocs = metric('proc.runq.runnable')
+if nprocs > cpus then
+  print('There are many runnable processes. ' .. nprocs .. ' are currently running')
 end
 .fi
 .RE
 .sp
-Check \fIfilesys.free\fR metric for free space on each disk for host \fImyhost.example.com\fR. Print out the disk that storage is too low and exit \fBpcp-machine\fR with an exit code of 1
+Check \fIfilesys.free\fR metric for free space on each disk for host \fImyhost.example.com\fR. Print out the specific device where storage is too low and exit \fBpcp-machine\fR with an exit code of 1
 .sp
 .RS 4
 .nf
 free_space = metric('filesys.free', {host='myhost.example.com'})
-for disk, bytes_free in pairs(free_space) do
-  if bytes_free < 10000000 then
-    print('Space on disk' .. instance .. 'is too low!')
+for disk, kbytes_free in pairs(free_space) do
+  if kbytes_free < 10000000 then
+    print('Space on disk' .. disk .. ' is too low!')
     return 1
   end
 end
