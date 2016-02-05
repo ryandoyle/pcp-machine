@@ -2,6 +2,10 @@
 #include <lua.h>
 #include <lauxlib.h>
 
+#ifndef PM_MAXERRMSGLEN
+#define PM_MAXERRMSGLEN		128
+#endif
+
 typedef struct pcp_ez_result {
     pmID pmid;
     pmDesc pm_desc;
