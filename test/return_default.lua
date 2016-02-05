@@ -1,0 +1,1 @@
+-- Empty script, should return 0
