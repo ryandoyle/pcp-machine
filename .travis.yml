@@ -7,8 +7,7 @@ install:
   - sudo apt-get install -y cmake pcp libpcp3-dev liblua5.1-0-dev
   - sudo /etc/init.d/pcp start
   - cd /var/lib/pcp/pmdas/sample/ && echo | sudo ./Install
-  - pminfo -f sample.long.hundred
 
 script:
   - cd $TRAVIS_BUILD_DIR
-  - cmake . && make && make test
+  - cmake . && make && ctest -VV
