@@ -7,7 +7,8 @@
 
 #define LUA_EXEC_FAILED_EXIT_CODE 125
 
-static char *default_host = "local:";
+/* To support older versions of pmapi, we can't use "local:" */
+static char *default_host = "localhost";
 static char *host_context;
 
 const static char usage_text[] = "Usage: pcp-machine [OPTIONS] SCRIPT\n"

@@ -1,6 +1,7 @@
 -- Query against a different host instead of the one specified via -H 
--- command line option
-free_space = metric('filesys.free', {host='local:'})
+-- command line option. For versions of PCP that support "local:", this
+-- should be preferred over "localhost"
+free_space = metric('filesys.free', {host='localhost'})
 
 -- For metrics that have instances, the returned value is a table 
 -- (basically a dictionary/map). Values are keyed off their external
