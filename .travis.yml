@@ -9,5 +9,5 @@ install:
   - cd /var/lib/pcp/pmdas/sample/ && echo | sudo ./Install
 
 script:
-  - cd $HOME/ryandoyle/pcp-machine
+  - cd $TRAVIS_BUILD_DIR
   - cmake . && make && make test
