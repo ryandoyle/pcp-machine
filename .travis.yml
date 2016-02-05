@@ -9,4 +9,5 @@ install:
   - cd /var/lib/pcp/pmdas/sample/ && echo | sudo ./Install
 
 script:
+  - cd $HOME/ryandoyle/pcp-machine
   - cmake . && make && make test
