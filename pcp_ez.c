@@ -2,10 +2,6 @@
 #include <lua.h>
 #include <lauxlib.h>
 
-#ifndef PM_MAXERRMSGLEN
-#define PM_MAXERRMSGLEN		128
-#endif
-
 typedef struct pcp_ez_result {
     pmID pmid;
     pmDesc pm_desc;
@@ -150,8 +146,7 @@ int pcp_ez_safe_raise_error(pcp_ez_query_t *query, lua_State *L, int error) {
     if(query) {
         pcp_ez_free(query);
     }
-    char error_string[PM_MAXERRMSGLEN];
-    return luaL_error(L, "%s\n", pmErrStr_r(error, error_string, sizeof(error_string)));
+    return luaL_error(L, "%s\n", pmErrStr(error));
 }
 
 
