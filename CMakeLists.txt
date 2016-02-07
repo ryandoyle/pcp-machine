@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(pcp-machine)
+project(pcp-machine C)
 
 find_package(Lua51)
 include_directories(${LUA_INCLUDE_DIR})
