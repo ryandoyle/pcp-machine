@@ -22,6 +22,11 @@ const static char usage_text[] = "Usage: pcp-machine [OPTIONS] SCRIPT\n"
 "For more information see: https://github.com/ryandoyle/pcp-machine\n\n"
 ;
 
+const static char lua_preload[] = 
+"printf = function(s,...)\n"
+"  return io.write(s:format(...))\n"
+"end";
+
 static void push_pmvalue_result(lua_State *L, pmValueSet *pm_value_set, int pm_type, int vlist_index) {
     pmAtomValue pm_atom_value;
 
@@ -148,6 +153,9 @@ static int evaluate_lua(char *script_location) {
 
     lua_pushcfunction(L, l_metric);
     lua_setglobal(L, "metric");
+
+    luaL_loadstring(L, lua_preload);
+    lua_pcall(L,0,0,0);
 
     error = luaL_loadfile(L, script_location) || lua_pcall(L,0,1,0);
 
