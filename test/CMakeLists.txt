@@ -17,3 +17,6 @@ add_test(return_default ${CMAKE_SOURCE_DIR}/test/check_return_code.sh ${CMAKE_CU
 add_test(return_custom  ${CMAKE_SOURCE_DIR}/test/check_return_code.sh ${CMAKE_CURRENT_SOURCE_DIR}/return_custom.lua 25)
 add_test(return_parse_fail ${CMAKE_SOURCE_DIR}/test/check_return_code.sh ${CMAKE_CURRENT_SOURCE_DIR}/return_parse_fail.lua 125)
 add_test(metric_fail ${CMAKE_SOURCE_DIR}/test/check_return_code.sh ${CMAKE_CURRENT_SOURCE_DIR}/metric_fail.lua 125)
+
+# Check output
+add_test(printf ${CMAKE_SOURCE_DIR}/test/check_output.sh ${CMAKE_CURRENT_SOURCE_DIR}/printf.lua "s: str, f: 1.23")
