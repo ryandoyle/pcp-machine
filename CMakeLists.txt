@@ -10,8 +10,10 @@ add_executable(pcp-machine ${SOURCE_FILES})
 target_link_libraries(pcp-machine pcp ${LUA_LIBRARIES})
 
 install(TARGETS pcp-machine DESTINATION bin)
-install(DIRECTORY samples/ DESTINATION share/pcp-machine PATTERN "scripts/*.lua")
+install(DIRECTORY samples/ DESTINATION share/pcp-machine/samples PATTERN "samples/*.lua")
 install(FILES doc/pcp-machine.1 DESTINATION share/man/man1)
+install(FILES doc/LICENCE.txt DESTINATION share/pcp-machine/)
+install(FILES doc/README.md DESTINATION share/pcp-machine/)
 
 enable_testing()
 add_subdirectory(test)
