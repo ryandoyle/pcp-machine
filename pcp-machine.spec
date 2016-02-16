@@ -3,7 +3,7 @@
 
 Name: pcp-machine
 Version: 0.1
-Release: 1
+Release: 2%{?dist}
 Summary: Lua scripting engine for Performance Co-Pilot
 License: GPL
 Group: Applications/System
