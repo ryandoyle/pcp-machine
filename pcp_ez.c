@@ -39,7 +39,14 @@ static int pcp_ez_lookup_metric(pcp_ez_query_t *query, const char *metric) {
     const char **metric_list;
 
     pmid_list = malloc(sizeof(pmID));
+    if(pmid_list == NULL) {
+        return -ENOMEM;
+    }
     metric_list = malloc(sizeof(char*));
+    if(metric_list == NULL) {
+        free(pmid_list);
+        return -ENOMEM;
+    }
     metric_list[0] = metric;
 
     if((error = pmLookupName(1, (char**)metric_list, pmid_list)) < 0) {
@@ -89,6 +96,9 @@ static int pcp_ez_fetch(pcp_ez_query_t *query) {
     int error;
 
     pmids_to_lookup = malloc(sizeof(pmID));
+    if(pmids_to_lookup == NULL) {
+        return -ENOMEM;
+    }
     pmids_to_lookup[0] = query->pmid;
     if((error = pmFetch(1, pmids_to_lookup, &pm_result)) < 0) {
         free(pmids_to_lookup);
